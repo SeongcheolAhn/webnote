@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import java.util.List;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +23,7 @@ class MemberServiceTest {
     @Autowired EntityManager em;
 
     @Test
-    public void 회원가입() {
+    void 회원가입() {
 
         // given
         Member member = new Member("loginId", "1234", "memberA");
@@ -34,7 +37,7 @@ class MemberServiceTest {
     }
 
     @Test
-    public void 중복_회원_검증() {
+    void 중복_회원_검증() {
 
         // given
         Member memberA = new Member("idA", "1234", "memberA");
@@ -46,5 +49,40 @@ class MemberServiceTest {
                 () -> memberService.join(memberB)); // 중복 예외 발생
 
         assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
+    }
+
+    @Test
+    void 회원조회() {
+
+        // given
+        Member memberA = new Member("idA", "1234", "memberA");
+        Long memberAId = memberService.join(memberA);
+
+        // when
+        String findMemberName = memberService.findOne(memberAId)
+                .map(Member::getName)
+                .orElse("null");
+
+        // then
+        assertThat(findMemberName).isEqualTo(memberA.getName());
+    }
+
+    @Test
+    void 모든_회원조회() {
+
+        // given
+        Member memberA = new Member("idA", "1234", "memberA");
+        Member memberB = new Member("idB", "2222", "memberB");
+        Member memberC = new Member("idC", "1334", "memberC");
+
+        memberService.join(memberA);
+        memberService.join(memberB);
+        memberService.join(memberC);
+
+        // when
+        List<Member> findMembers = memberService.findMembers();
+
+        // then
+        assertThat(findMembers.size()).isEqualTo(3);
     }
 }
