@@ -4,16 +4,20 @@ import lombok.RequiredArgsConstructor;
 import note.webnote.domain.Member;
 import note.webnote.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
     // 회원 가입
+    @Transactional
     public Long join(Member member) {
 
         // 중복 검증
@@ -27,7 +31,7 @@ public class MemberService {
     }
 
     // 회원 조회
-    public Member findOne(Long id) {
+    public Optional<Member> findOne(Long id) {
         return memberRepository.findById(id);
     }
 
