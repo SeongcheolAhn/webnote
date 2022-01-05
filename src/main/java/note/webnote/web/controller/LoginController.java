@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import note.webnote.domain.Member;
 import note.webnote.web.form.LoginForm;
+import note.webnote.web.intercptor.SessionMember;
 import note.webnote.web.service.LoginService;
 import note.webnote.web.service.MemberService;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @Slf4j
@@ -46,7 +48,7 @@ public class LoginController {
         }
 
         // 로그인 성공
-        request.getSession().setAttribute("Login Member", findMember);
+        request.getSession().setAttribute("LoginMember", new SessionMember(findMember.getId()));
         String redirectUrl = "/members/" + findMember.getId();
         log.info("로그인 성공");
 
