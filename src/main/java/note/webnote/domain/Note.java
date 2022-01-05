@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,6 +21,9 @@ public class Note {
     private String content;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
+
+    @OneToMany(mappedBy = "note")
+    private List<MemberNote> memberNote;
 
     public Note(String title, String content) {
         this.title = title;
