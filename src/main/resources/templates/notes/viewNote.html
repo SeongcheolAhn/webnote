@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header ('노트 저장')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:replace="fragments/bodyHeader"></div>
+
+<div class="container">
+    <div class="mb-3">
+        <label th:for="name" class="form-label">제목</label>
+        <input type="text" id="title" class="form-control" th:field="${viewNoteDto.title}" readonly>
+    </div>
+
+    <div class="mb-3">
+        <label th:for="content" class="form-label">내용</label>
+        <textarea name="content" class="form-control" th:text="${viewNoteDto.content}" readonly></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label th:for="host" class="form-label">제목</label>
+        <input type="text" id="host" class="form-control" th:field="${viewNoteDto.hostMemberName}" readonly>
+    </div>
+    <button th:href="" type="submit" class="btn btn-primary">수정</button>
+</div>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package note.webnote.service;
 
 import note.webnote.domain.Member;
+import note.webnote.web.service.MemberService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,7 @@
 package note.webnote.repository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import note.webnote.domain.Member;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class MemberRepository {
 
     private final EntityManager em;
@@ -23,6 +25,7 @@ public class MemberRepository {
     }
 
     public Optional<Member> findByLoginId(String memberLoginId) {
+        log.info("findByLoginId");
         return findByAll().stream()
                 .filter(m -> m.getLoginId().equals(memberLoginId))
                 .findFirst();
