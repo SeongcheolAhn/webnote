@@ -31,4 +31,12 @@ public class Note {
         this.createdDate = LocalDateTime.now();
         this.lastModifiedDate = LocalDateTime.now();
     }
+
+    public void editTitle(String title) {
+        this.title = title;
+    }
+
+    public void editContent(String content) {
+        this.content = content;
+    }
 }

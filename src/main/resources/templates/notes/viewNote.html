@@ -19,10 +19,12 @@
     </div>
 
     <div class="mb-3">
-        <label th:for="host" class="form-label">제목</label>
+        <label th:for="host" class="form-label">호스트</label>
         <input type="text" id="host" class="form-control" th:field="${viewNoteDto.hostMemberName}" readonly>
     </div>
-    <button th:href="" type="submit" class="btn btn-primary">수정</button>
+    <button th:onclick=
+                    "|location.href='@{/{memberId}/notes/{noteId}/edit (memberId=${viewNoteDto.hostMemberId}, noteId=${viewNoteDto.noteId})}'|"
+            type="submit" class="btn btn-primary">수정</button>
 </div>
 </body>
 </html>

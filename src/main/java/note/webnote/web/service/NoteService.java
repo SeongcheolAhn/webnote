@@ -55,7 +55,7 @@ public class NoteService {
 
 
     /**
-     *
+     * 노트 1개 조회시 필요한 정보를 dto로 반환한다.
      */
     public ViewNoteDto findNote(Long noteId) {
         Optional<Note> findNote = noteRepository.findById(noteId);
@@ -69,6 +69,6 @@ public class NoteService {
                 .findFirst().get().getMember();
 
 
-        return new ViewNoteDto(note.getTitle(), note.getContent(), member.getName());
+        return new ViewNoteDto(note.getTitle(), note.getContent(), member.getName(), member.getId(), note.getId());
     }
 }
