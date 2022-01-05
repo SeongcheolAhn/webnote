@@ -9,6 +9,11 @@
 <div th:replace="fragments/bodyHeader"></div>
 
 <div class="container">
+
+    <button th:onclick=
+                    "|location.href='@{/{memberId}/notes/new (memberId=${notes[0].memberId})}'|"
+            type="submit" class="btn btn-primary">노트 생성</button>
+
     <table class="table table-striped">
         <thead>
         <tr>

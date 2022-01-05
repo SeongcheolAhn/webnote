@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,7 @@ public class Note {
     private LocalDateTime lastModifiedDate;
 
     @OneToMany(mappedBy = "note")
-    private List<MemberNote> memberNote;
+    private List<MemberNote> memberNote = new ArrayList<>();
 
     public Note(String title, String content) {
         this.title = title;
