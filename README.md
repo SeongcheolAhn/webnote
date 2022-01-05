@@ -13,9 +13,9 @@
   - Artifact: webnote
   - Name : webnote
   - Package name : note.webnote
-  - Packagin : Jar
+  - Packaging : Jar
   - Java : 11
-- Dependencies : Spring Web, Spring Data JPA, Validation, H2 database, Thymeleaf
+- Dependencies : Spring Web, Spring Data JPA, Validation, H2 database, Thymeleaf, lombok
 ---
 ## 제작 과정
 - 도메인 모델
