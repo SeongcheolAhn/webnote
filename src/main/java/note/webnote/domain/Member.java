@@ -20,10 +20,10 @@ public class Member {
     private String name;
     private LocalDateTime createdDate;
 
-    public Member(String loginId, String password, String name) {
+    public Member(String name, String loginId, String password) {
+        this.name = name;
         this.loginId = loginId;
         this.password = password;
-        this.name = name;
         this.createdDate = LocalDateTime.now();
     }
 }

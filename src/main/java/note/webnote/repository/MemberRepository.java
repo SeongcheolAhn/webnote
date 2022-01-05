@@ -22,10 +22,10 @@ public class MemberRepository {
         return Optional.ofNullable(em.find(Member.class, id));
     }
 
-    public List<Member> findByLoginId(String memberLoginId) {
-        return em.createQuery("select m from Member m where m.loginId = :loginId", Member.class)
-                .setParameter("loginId", memberLoginId)
-                .getResultList();
+    public Optional<Member> findByLoginId(String memberLoginId) {
+        return findByAll().stream()
+                .filter(m -> m.getLoginId().equals(memberLoginId))
+                .findFirst();
     }
 
     public List<Member> findByAll() {
