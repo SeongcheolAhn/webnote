@@ -8,19 +8,20 @@
 <div th:replace="fragments/bodyHeader"></div>
 
 <div class="container">
-    <form>
+    <form action="/" th:action th:object="${loginForm}" method="post">
         <h1 class="h3 mb-3 fw-normal">로그인</h1>
+        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">오류 메시지</p>
 
         <div class="form-floating">
-            <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input type="text" class="form-control" id="floatingInput" th:field="*{loginId}">
             <label for="floatingInput">Id</label>
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <input type="password" class="form-control" id="floatingPassword" th:field="*{password}">
             <label for="floatingPassword">Password</label>
         </div>
 
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">로그인</button>
     </form>
 </div>
 </body>

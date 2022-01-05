@@ -7,6 +7,7 @@ import note.webnote.web.form.LoginForm;
 import note.webnote.web.service.LoginService;
 import note.webnote.web.service.MemberService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,8 @@ public class LoginController {
     private final LoginService loginService;
 
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(Model model) {
+        model.addAttribute("loginForm", new LoginForm());
         return "login/LoginForm";
     }
 
@@ -45,9 +47,10 @@ public class LoginController {
 
         // 로그인 성공
         request.getSession().setAttribute("Login Member", findMember);
-        String redirectURL = "/member/" + findMember.getId();
+        String redirectUrl = "/members/" + findMember.getId();
+        log.info("로그인 성공");
 
-        return "redirect:" + redirectURL;
+        return "redirect:" + redirectUrl;
 
     }
 }

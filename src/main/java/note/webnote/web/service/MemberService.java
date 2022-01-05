@@ -1,20 +1,26 @@
 package note.webnote.web.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import note.webnote.domain.Member;
 import note.webnote.repository.MemberRepository;
+import note.webnote.repository.NoteRepository;
+import note.webnote.web.dto.ViewMemberNoteDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final NoteRepository noteRepository;
 
     // 회원 가입
     @Transactional
@@ -38,5 +44,18 @@ public class MemberService {
     // 모든 회원 조회
     public List<Member> findMembers() {
         return memberRepository.findByAll();
+    }
+
+    // 회원의 노트 전부 조회
+    public List<ViewMemberNoteDto> findNotes(Long memberId) {
+        Optional<Member> findMember = memberRepository.findById(memberId);
+        if (findMember.isEmpty()) {
+            log.info("Member 조회 불가능");
+            return null;
+        }
+
+        return noteRepository.findAllNoteByMember(findMember.get()).stream()
+                .map(ViewMemberNoteDto:: new)
+                .collect(Collectors.toList());
     }
 }

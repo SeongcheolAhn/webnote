@@ -6,6 +6,7 @@ import note.webnote.domain.Member;
 import note.webnote.web.form.MemberSaveForm;
 import note.webnote.web.service.MemberService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,28 +20,36 @@ public class MemberController {
 
     @GetMapping
     public String members() {
-        log.info("member controller");
+        log.info("[GET]    member controller");
         return "home";
     }
 
     @GetMapping("/new")
-    public String createMember(@ModelAttribute MemberSaveForm memberSaveForm) {
-        log.info("create member");
+    public String createMemberForm(@ModelAttribute MemberSaveForm memberSaveForm) {
+        log.info("[GET]    createMemberForm");
         return "members/addMemberForm";
     }
 
     @PostMapping("/new")
-    public String addMember(@ModelAttribute MemberSaveForm memberSaveForm, BindingResult bindingResult) {
+    public String createMember(@ModelAttribute MemberSaveForm memberSaveForm, BindingResult bindingResult) {
+
+        log.info("[POST]    createMember");
 
         if(bindingResult.hasErrors()) {
             return "members/addMemberForm";
         }
 
         Member member = new Member(memberSaveForm.getName(), memberSaveForm.getLoginId(), memberSaveForm.getPassword());
-        Long memberId = memberService.join(member);
+        memberService.join(member);
 
         System.out.println("member = " + member);
         return "redirect:/";
+    }
+
+    @GetMapping("/{memberId}")
+    public String memberHome(@PathVariable Long memberId, Model model) {
+        model.addAttribute("notes", memberService.findNotes(memberId));
+        return "members/viewMemberNote";
     }
 
 }
