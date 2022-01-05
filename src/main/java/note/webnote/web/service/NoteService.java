@@ -8,12 +8,16 @@ import note.webnote.domain.Note;
 import note.webnote.domain.Permission;
 import note.webnote.repository.MemberRepository;
 import note.webnote.repository.NoteRepository;
+import note.webnote.web.dto.ParticipantDto;
 import note.webnote.web.dto.ViewNoteDto;
 import note.webnote.web.form.NoteSaveForm;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -67,8 +71,27 @@ public class NoteService {
         Member member = note.getMemberNote().stream()
                 .filter(mn -> mn.getPermission() == Permission.HOST)
                 .findFirst().get().getMember();
+        ViewNoteDto viewNoteDto = new ViewNoteDto(note.getTitle(), note.getContent(),
+                member.getName(), member.getId(), note.getId());
 
+        // 노트 참여자 ParticipantDto 추가
+        List<MemberNote> memberNote = note.getMemberNote();
 
-        return new ViewNoteDto(note.getTitle(), note.getContent(), member.getName(), member.getId(), note.getId());
+        List<Member> members = memberNote.stream()
+                .filter(mn -> mn.getPermission() != Permission.HOST)
+                .map(MemberNote::getMember)
+                .collect(Collectors.toList());
+
+        for (Member m : members) {
+
+            Permission permission = memberNote.stream()
+                    .filter(mn -> mn.getMember().getId().equals(m.getId()))
+                    .findFirst().map(MemberNote::getPermission).get();
+            ParticipantDto participantDto = new ParticipantDto(m.getId(), m.getName(), permission);
+
+            viewNoteDto.addParticipantDtos(participantDto);
+        }
+
+        return viewNoteDto;
     }
 }

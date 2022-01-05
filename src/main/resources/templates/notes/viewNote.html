@@ -22,6 +22,25 @@
         <label th:for="host" class="form-label">호스트</label>
         <input type="text" id="host" class="form-control" th:field="${viewNoteDto.hostMemberName}" readonly>
     </div>
+
+    <label class="form-label">참여자</label>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>이름</th>
+            <th>권한</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${viewNoteDto.participantDtos}">
+            <td th:text="${member.id}"></td>
+            <td th:text="${member.name}"></td>
+            <td th:text="${member.permission}"></td>
+        </tr>
+        </tbody>
+    </table>
     <button th:onclick=
                     "|location.href='@{/{memberId}/notes/{noteId}/edit (memberId=${viewNoteDto.hostMemberId}, noteId=${viewNoteDto.noteId})}'|"
             type="submit" class="btn btn-primary">수정</button>
