@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header ('Hello WebNote')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:replace="fragments/bodyHeader"></div>
+
+<h1 class="visually-hidden">Heroes examples</h1>
+
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">Web Note</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">
+            어서오세요! 간편하게 노트를 공유할 수 있는 Web Note 입니다.
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <button type="button" class="btn btn-primary btn-lg px-4 gap-3" onclick="location.href='/login'">로그인</button>
+            <button type="button" class="btn btn-outline-secondary btn-lg px-4">친구가 공유한 노트 보기</button>
+        </div>
+        <a href="/members/new"> 처음이신가요? </a>
+    </div>
+</div>
+</body>
+</html>
