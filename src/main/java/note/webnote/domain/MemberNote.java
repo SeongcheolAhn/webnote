@@ -21,6 +21,7 @@ public class MemberNote {
     @JoinColumn(name = "NOTE_ID")
     private Note note;
 
+    @Enumerated(value = EnumType.STRING)
     private Permission permission;
 
     public MemberNote(Member member, Note note, Permission permission) {
