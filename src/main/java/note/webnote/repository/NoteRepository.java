@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import note.webnote.domain.Member;
 import note.webnote.domain.MemberNote;
 import note.webnote.domain.Note;
+import note.webnote.web.dto.MemberHomeDto;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -36,15 +36,8 @@ public class NoteRepository {
     /**
      * 파라미터로 전달된 멤버의 모든 노트 조회
      */
-    public List<MemberNote> findAllNoteByMember(Member member) {
+    public MemberHomeDto findAllNoteByMember(Member member) {
         log.info("멤버가 가진 노트 전부 조회");
-        return em.createQuery(
-                        "select mn from MemberNote mn" +
-                                " join fetch mn.note n" +
-                                " join fetch mn.member m" +
-                                " where mn.member = :member", MemberNote.class)
-                .setParameter("member", member)
-                .getResultList();
+        return new MemberHomeDto(member);
     }
-
 }

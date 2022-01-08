@@ -11,7 +11,7 @@
 <div class="container">
 
     <button th:onclick=
-                    "|location.href='@{/{memberId}/notes/new (memberId=${notes[0].memberId})}'|"
+                    "|location.href='@{/{memberId}/notes/new (memberId=${memberHomeDto.memberId})}'|"
             type="submit" class="btn btn-primary">노트 생성</button>
 
     <button th:onclick="|location.href='@{/logout}'|" type="submit" class="btn btn-primary">로그아웃</button>
@@ -27,13 +27,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="note : ${notes}">
-            <td th:text="${note.noteId}"></td>
-            <td th:text="${note.title}"></td>
-            <td th:text="${note.permission}"></td>
-            <td th:text="${note.lastModifiedDate}"></td>
+        <tr th:each="mn : ${memberHomeDto.memberHomeMemberNoteDtos}">
+            <td th:text="${mn.noteId}"></td>
+            <td th:text="${mn.title}"></td>
+            <td th:text="${mn.permission}"></td>
+            <td th:text="${mn.lastModifiedDate}"></td>
             <td>
-                <a href="#" th:href="@{/{memberId}/notes/{noteId} (memberId=${note.memberId}, noteId=${note.noteId})}" class="btn btn-primary" role="button">보기</a>
+                <a href="#" th:href="@{/{memberId}/notes/{noteId} (memberId=${memberHomeDto.memberId}, noteId=${mn.noteId})}" class="btn btn-primary" role="button">보기</a>
             </td>
         </tr>
         </tbody>

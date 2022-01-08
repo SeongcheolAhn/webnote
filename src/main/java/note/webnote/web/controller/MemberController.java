@@ -12,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @Controller
 @RequiredArgsConstructor
@@ -62,8 +61,8 @@ public class MemberController {
             return "home";
         }
 
-        model.addAttribute("notes", memberService.findNotes(memberId));
-        return "members/viewMemberNote";
+        model.addAttribute("memberHomeDto", memberService.findNotes(memberId));
+        return "members/memberHome";
     }
 
 }
