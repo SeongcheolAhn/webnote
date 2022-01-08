@@ -4,11 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import note.webnote.domain.Member;
 import note.webnote.web.form.MemberSaveForm;
+import note.webnote.web.intercptor.SessionMember;
 import note.webnote.web.service.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequiredArgsConstructor
@@ -47,7 +51,17 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}")
-    public String memberHome(@PathVariable Long memberId, Model model) {
+    public String memberHome(@PathVariable Long memberId, Model model, HttpServletRequest request) {
+
+        // 본인이 맞는지 확인
+        SessionMember loginMember = (SessionMember) request.getSession().getAttribute("LoginMember");
+        if (!loginMember.getId().equals(memberId)) {
+            log.info("본인 외 접근");
+            log.info("memberId = {}",memberId);
+            log.info("loginMemberId = {}", loginMember.getId());
+            return "home";
+        }
+
         model.addAttribute("notes", memberService.findNotes(memberId));
         return "members/viewMemberNote";
     }
