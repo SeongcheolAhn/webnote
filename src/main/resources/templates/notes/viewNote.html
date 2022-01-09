@@ -34,10 +34,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="member : ${viewNoteDto.participantDtos}">
-            <td th:text="${member.id}"></td>
-            <td th:text="${member.name}"></td>
-            <td th:text="${member.permission}"></td>
+        <tr th:each="participant : ${viewNoteDto.getViewNoteParticipantDtos}">
+            <td th:text="${participant.memberId}"></td>
+            <td th:text="${participant.memberName}"></td>
+            <td th:text="${participant.permission}"></td>
         </tr>
         </tbody>
     </table>

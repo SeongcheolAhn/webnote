@@ -28,7 +28,7 @@ public class NoteController {
                        @PathVariable Long memberId,
                        Model model) {
         log.info("[GET]    findNote");
-        ViewNoteDto dto = noteService.findNote(noteId);
+        ViewNoteDto dto = noteService.findNote(noteId, memberId);
         model.addAttribute("viewNoteDto", dto);
         return "notes/viewNote";
     }
@@ -52,22 +52,29 @@ public class NoteController {
     }
 
     @GetMapping("/{noteId}/edit")
-    public String editNoteForm(@PathVariable Long noteId, Model model) {
+    public String editNoteForm(@PathVariable Long noteId,
+                               @PathVariable Long memberId,
+                               Model model) {
         log.info("[GET]    editNoteForm");
-        model.addAttribute("viewNoteDto", noteService.findNote(noteId));
+
+        Optional<Note> note = noteService.findOne(noteId);
+
+        if (note.isEmpty()) {
+            log.info("노트 존재하지 않음");
+            return "{memberId}/notes/{noteId}";
+        }
+
+        model.addAttribute("noteSaveForm", new NoteSaveForm(note.get(), memberId));
         return "notes/editNoteForm";
     }
 
-    @Transactional
     @PostMapping("/{noteId}/edit")
-    public String editNote(@ModelAttribute ViewNoteDto viewNoteDto,
+    public String editNote(@ModelAttribute NoteSaveForm noteSaveForm,
                            @PathVariable Long memberId,
                            @PathVariable Long noteId) {
         log.info("[POST]    editNote");
 
-        Note note = noteService.findOne(viewNoteDto.getNoteId()).get();
-        note.editTitle(viewNoteDto.getTitle());
-        note.editContent(viewNoteDto.getContent());
+        noteService.saveEditNote(noteId, noteSaveForm);
 
         String redirectUrl = "/" + memberId + "/notes/" + noteId;
         return "redirect:" + redirectUrl;

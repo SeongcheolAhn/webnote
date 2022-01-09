@@ -8,7 +8,7 @@ import note.webnote.domain.Note;
 import note.webnote.domain.Permission;
 import note.webnote.repository.MemberRepository;
 import note.webnote.repository.NoteRepository;
-import note.webnote.web.dto.ParticipantDto;
+import note.webnote.web.dto.ViewNoteParticipantDto;
 import note.webnote.web.dto.ViewNoteDto;
 import note.webnote.web.form.NoteSaveForm;
 import org.springframework.stereotype.Service;
@@ -17,11 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class NoteService {
 
     private final NoteRepository noteRepository;
@@ -34,6 +34,13 @@ public class NoteService {
 
     public Optional<Note> findOne(Long id) {
         return noteRepository.findById(id);
+    }
+
+    @Transactional
+    public void saveEditNote(Long noteId, NoteSaveForm noteSaveForm) {
+        Note note = findOne(noteId).get();
+        note.editTitle(noteSaveForm.getTitle());
+        note.editContent(noteSaveForm.getContent());
     }
 
     /* Note 엔티티와 MemberNote 모두 저장 */
@@ -59,39 +66,18 @@ public class NoteService {
 
 
     /**
-     * 노트 1개 조회시 필요한 정보를 dto로 반환한다.
+     * viewNote 페이지에서 필요한 dto를 생성한다.
      */
-    public ViewNoteDto findNote(Long noteId) {
+    public ViewNoteDto findNote(Long noteId, Long hostId) {
+
         Optional<Note> findNote = noteRepository.findById(noteId);
         if(findNote.isEmpty()) {
             return null;
         }
 
+        // ViewNoteDto 생성
         Note note = findNote.get();
-        Member member = note.getMemberNote().stream()
-                .filter(mn -> mn.getPermission() == Permission.HOST)
-                .findFirst().get().getMember();
-        ViewNoteDto viewNoteDto = new ViewNoteDto(note.getTitle(), note.getContent(),
-                member.getName(), member.getId(), note.getId());
+        return new ViewNoteDto(note, hostId);
 
-        // 노트 참여자 ParticipantDto 추가
-        List<MemberNote> memberNote = note.getMemberNote();
-
-        List<Member> members = memberNote.stream()
-                .filter(mn -> mn.getPermission() != Permission.HOST)
-                .map(MemberNote::getMember)
-                .collect(Collectors.toList());
-
-        for (Member m : members) {
-
-            Permission permission = memberNote.stream()
-                    .filter(mn -> mn.getMember().getId().equals(m.getId()))
-                    .findFirst().map(MemberNote::getPermission).get();
-            ParticipantDto participantDto = new ParticipantDto(m.getId(), m.getName(), permission);
-
-            viewNoteDto.addParticipantDtos(participantDto);
-        }
-
-        return viewNoteDto;
     }
 }
