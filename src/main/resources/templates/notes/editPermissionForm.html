@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header ('권한 수정')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:replace="fragments/bodyHeader"></div>
+<div class="container">
+    <form action="" th:action th:object="${editPermissionDto}" method="post">
+        <h1 class="h3 mb-3 fw-normal">권한 수정</h1>
+
+        <div class="mb-3">
+            <label th:for="editMemberId" class="form-label">멤버 ID</label>
+            <input type="text" id="editId" class="form-control" th:field="*{editMemberId}" readonly>
+        </div>
+        <div class="mb-3">
+            <label th:for="editMemberName" class="form-label">내용</label>
+            <input type="text" id="editMemberName" class="form-control" th:field="*{editMemberName}" readonly>
+        </div>
+        <div class="mb-3">
+            <label th:for="permission" class="form-label">권한</label>
+            <select th:field="*{editPermission}" aria-label="permission" class="form-control">
+                <option selected th:value="*{editPermission}">권한 선택</option>
+                <option th:each="permission : ${permissions}" th:value="${permission}" th:text="${permission}"></option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">권한 변경</button>
+    </form>
+</div>
+</body>
+</html>

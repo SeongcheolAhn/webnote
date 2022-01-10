@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header ('노트 저장')">
+<head th:replace="fragments/header :: header ('노트')">
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
@@ -42,8 +42,10 @@
         </tbody>
     </table>
     <button th:onclick=
-                    "|location.href='@{/{memberId}/notes/{noteId}/edit (memberId=${viewNoteDto.hostMemberId}, noteId=${viewNoteDto.noteId})}'|"
-            type="submit" class="btn btn-primary">수정</button>
+                    "|location.href='@{/{memberId}/notes/{noteId}/edit (memberId=${viewNoteDto.loginId}, noteId=${viewNoteDto.noteId})}'|"
+            type="submit" class="btn btn-primary"
+            th:if="${viewNoteDto.isWrite()}">수정
+    </button>
 </div>
 </body>
 </html>

@@ -8,19 +8,45 @@
 <div th:replace="fragments/bodyHeader"></div>
 
 <div class="container">
-    <form action="" th:action th:object="${noteSaveForm}" method="post">
+    <form action="" th:action th:object="${editNoteForm}" method="post">
         <h1 class="h3 mb-3 fw-normal">Note</h1>
 
         <div class="mb-3">
             <label th:for="name" class="form-label">제목</label>
-            <input type="text" id="name" class="form-control" th:field="*{title}">
+            <input type="text" id="title" class="form-control" th:field="*{title}">
         </div>
         <div class="mb-3">
             <label th:for="loginId" class="form-label">내용</label>
             <textarea id="content" class="form-control" th:field="*{content}"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+
+        <!--/*  참여자  */-->
+        <label class="form-label" th:if="${editNoteDto.isHost()}">참여자</label>
+        <table class="table table-striped" th:if="${editNoteDto.isHost()}" >
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>이름</th>
+                <th>권한</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="participant : *{participants}">
+                <td th:text="${participant.memberId}"></td>
+                <td th:text="${participant.memberName}"></td>
+                <td th:text="${participant.permission}"
+                th:onclick=
+                        "|location.href='@{/{memberId}/notes/{noteId}/edit/{editId} (memberId=${editNoteDto.loginId}, noteId=${editNoteDto.noteId}, editId=${participant.memberId})}'|"
+                style="cursor: pointer;color: #0c63e4"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-primary">저장</button>
     </form>
+
+    </table>
 </div>
 </body>
 </html>

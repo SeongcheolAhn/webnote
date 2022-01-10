@@ -14,16 +14,19 @@ import java.util.stream.Collectors;
 @Setter
 public class ViewNoteDto {
 
+    private Long loginId;
     private Long noteId;
     private String title;
     private String content;
     private List<ViewNoteParticipantDto> viewNoteParticipantDtos = new ArrayList<>();
     private String hostMemberName;
     private Long hostMemberId;
+    private boolean isWrite;
 
 
-    public ViewNoteDto(Note note, Long hostId) {
+    public ViewNoteDto(Note note, Long loginId) {
 
+        this.loginId = loginId;
         noteId = note.getId();
         title = note.getTitle();
         content = note.getContent();
@@ -33,12 +36,20 @@ public class ViewNoteDto {
 
         // 참가자중 HOST 권한 찾기
         Optional<ViewNoteParticipantDto> host = viewNoteParticipantDtos.stream()
-                .filter(ViewNoteParticipantDto -> ViewNoteParticipantDto.getMemberId().equals(hostId))
+                .filter(ViewNoteParticipantDto -> ViewNoteParticipantDto.getPermission().equals(Permission.HOST))
                 .findFirst();
         host.ifPresent(viewNoteParticipantDto -> {
             hostMemberName = viewNoteParticipantDto.getMemberName();
             hostMemberId = viewNoteParticipantDto.getMemberId();
         });
+
+        // 로그인 멤버의 권한 조회
+        Permission loginMemberPermission = viewNoteParticipantDtos.stream()
+                .filter(participant -> participant.getMemberId().equals(loginId))
+                .findFirst().get()
+                .getPermission();
+
+        isWrite = loginId.equals(hostMemberId) || loginMemberPermission.equals(Permission.READ_WRITE);
     }
 
 }

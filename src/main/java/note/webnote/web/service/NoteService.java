@@ -8,15 +8,16 @@ import note.webnote.domain.Note;
 import note.webnote.domain.Permission;
 import note.webnote.repository.MemberRepository;
 import note.webnote.repository.NoteRepository;
+import note.webnote.web.dto.EditPermissionDto;
 import note.webnote.web.dto.ViewNoteParticipantDto;
 import note.webnote.web.dto.ViewNoteDto;
+import note.webnote.web.form.EditNoteForm;
 import note.webnote.web.form.NoteSaveForm;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,10 +38,10 @@ public class NoteService {
     }
 
     @Transactional
-    public void saveEditNote(Long noteId, NoteSaveForm noteSaveForm) {
+    public void saveEditNote(Long noteId, EditNoteForm editNoteForm) {
         Note note = findOne(noteId).get();
-        note.editTitle(noteSaveForm.getTitle());
-        note.editContent(noteSaveForm.getContent());
+        note.editTitle(editNoteForm.getTitle());
+        note.editContent(editNoteForm.getContent());
     }
 
     /* Note 엔티티와 MemberNote 모두 저장 */
@@ -79,5 +80,48 @@ public class NoteService {
         Note note = findNote.get();
         return new ViewNoteDto(note, hostId);
 
+    }
+
+    /**
+     * 회원이 속한 노트의 hostId를 찾아준다.
+     */
+    public Long findHost(Note note, Long memberId) {
+        MemberNote memberNote = note.getMemberNote().stream()
+                .filter(mn -> mn.getPermission() == Permission.HOST)
+                .findFirst().get();
+        return memberNote.getMember().getId();
+    }
+
+
+    /**
+     * 회원 권한 수정 페이지에 필요한 Dto 반환
+     */
+    public EditPermissionDto findEditPermissionDto(Long editMemberId, Long noteId) {
+        Optional<Note> findNote = findOne(noteId);
+        if(findNote.isEmpty()) {
+            return null;
+        }
+        Note note = findNote.get();
+        MemberNote memberNote = note.getMemberNote().stream()
+                .filter(mn -> mn.getMember().getId().equals(editMemberId))
+                .findFirst().get();
+
+        return new EditPermissionDto(editMemberId, memberNote.getMember().getName(), memberNote.getPermission().toString());
+    }
+
+    /**
+     * 권한 변경 저장
+     */
+    @Transactional
+    public void editPermission(Long noteId, Long editMemberId, EditPermissionDto dto) {
+        Note note = findOne(noteId).get();
+        MemberNote memberNote = note.getMemberNote().stream()
+                .filter(mn -> mn.getMember().getId().equals(editMemberId))
+                .findFirst().get();
+        if (dto.getEditPermission().equals(Permission.READ_WRITE.toString())) {
+            memberNote.editPermission(Permission.READ_WRITE);
+        } else {
+            memberNote.editPermission(Permission.READ_ONLY);
+        }
     }
 }

@@ -29,4 +29,8 @@ public class MemberNote {
         this.note = note;
         this.permission = permission;
     }
+
+    public void editPermission(Permission permission) {
+        this.permission = permission;
+    }
 }
