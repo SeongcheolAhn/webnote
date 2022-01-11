@@ -46,6 +46,10 @@
             type="submit" class="btn btn-primary"
             th:if="${viewNoteDto.isWrite()}">수정
     </button>
+    <button th:onclick=
+                    "|location.href='@{/}'|"
+            type="submit" class="btn btn-primary">목록으로 돌아가기
+    </button>
 </div>
 </body>
 </html>
