@@ -47,6 +47,11 @@
             th:if="${viewNoteDto.isWrite()}">수정
     </button>
     <button th:onclick=
+                    "|location.href='@{/{memberId}/notes/{noteId}/edit/participants (memberId=${viewNoteDto.loginId}, noteId=${viewNoteDto.noteId})}'|"
+            type="submit" class="btn btn-primary"
+            th:if="${viewNoteDto.isHost()}">참여자 수정
+    </button>
+    <button th:onclick=
                     "|location.href='@{/}'|"
             type="submit" class="btn btn-primary">목록으로 돌아가기
     </button>

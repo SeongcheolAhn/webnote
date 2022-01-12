@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header ('참여자 목록')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:replace="fragments/bodyHeader"></div>
+<div class="container">
+    <h2>참여자 목록</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>이름</th>
+            <th>권한</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="participant : ${participantsDto.participants}">
+            <td th:text="${participant.memberId}"></td>
+            <td th:text="${participant.memberName}"></td>
+            <td th:text="${participant.permission}"></td>
+            <td th:onclick=
+                        "|location.href='@{/{memberId}/notes/{noteId}/edit/delete/{deleteMemberId} (memberId=${participantsDto.loginId}, noteId=${participantsDto.noteId}, deleteMemberId=${participant.memberId})}'|"
+                style="cursor: pointer;color: #0c63e4">삭제</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

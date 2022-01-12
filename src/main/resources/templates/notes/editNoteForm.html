@@ -22,7 +22,7 @@
 
         <!--/*  참여자  */-->
         <label class="form-label" th:if="${editNoteDto.isHost()}">참여자</label>
-        <table class="table table-striped" th:if="${editNoteDto.isHost()}" >
+        <table class="table table-striped" th:if="${editNoteDto.isHost()}">
             <thead>
             <tr>
                 <th>#</th>
@@ -36,16 +36,15 @@
                 <td th:text="${participant.memberId}"></td>
                 <td th:text="${participant.memberName}"></td>
                 <td th:text="${participant.permission}"
-                th:onclick=
-                        "|location.href='@{/{memberId}/notes/{noteId}/edit/{editId} (memberId=${editNoteDto.loginId}, noteId=${editNoteDto.noteId}, editId=${participant.memberId})}'|"
-                style="cursor: pointer;color: #0c63e4"></td>
+                    th:onclick=
+                            "|location.href='@{/{memberId}/notes/{noteId}/edit/{editMemberId} (memberId=${editNoteDto.loginId}, noteId=${editNoteDto.noteId}, editId=${participant.memberId})}'|"
+                    style="cursor: pointer;color: #0c63e4"></td>
             </tr>
             </tbody>
         </table>
 
         <button type="submit" class="btn btn-primary">저장</button>
     </form>
-
     </table>
 </div>
 </body>

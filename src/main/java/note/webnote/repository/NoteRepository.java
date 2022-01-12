@@ -40,4 +40,11 @@ public class NoteRepository {
         log.info("멤버가 가진 노트 전부 조회");
         return new MemberHomeDto(member);
     }
+
+    /**
+     * 전달된 멤버노트 삭제
+     */
+    public void removeMemberNote(MemberNote memberNote) {
+        em.remove(memberNote);
+    }
 }

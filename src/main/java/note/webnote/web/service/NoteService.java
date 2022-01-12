@@ -9,6 +9,7 @@ import note.webnote.domain.Permission;
 import note.webnote.repository.MemberRepository;
 import note.webnote.repository.NoteRepository;
 import note.webnote.web.dto.EditPermissionDto;
+import note.webnote.web.dto.ParticipantsDto;
 import note.webnote.web.dto.ViewNoteParticipantDto;
 import note.webnote.web.dto.ViewNoteDto;
 import note.webnote.web.form.EditNoteForm;
@@ -16,6 +17,7 @@ import note.webnote.web.form.NoteSaveForm;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +29,7 @@ public class NoteService {
 
     private final NoteRepository noteRepository;
     private final MemberRepository memberRepository;
+    private final LoginService loginService;
 
     public Long saveNote(Note note) {
         noteRepository.save(note);
@@ -123,5 +126,45 @@ public class NoteService {
         } else {
             memberNote.editPermission(Permission.READ_ONLY);
         }
+    }
+
+    /**
+     * 참여자 수정 페이지 - 참여자 목록 반환
+     */
+    public ParticipantsDto participants(Long noteId, Long loginId) {
+        Optional<Note> findNote = findOne(noteId);
+        if(findNote.isEmpty()) {
+            log.info("노트 없음");
+        }
+        Note note = findNote.get();
+        return new ParticipantsDto(note, loginId);
+    }
+
+    /**
+     * 참여자 삭제
+     */
+    @Transactional
+    public void deleteMember(Long loginId, Long noteId, Long deleteMemberId
+    , HttpServletRequest request) {
+
+        // 삭제 권한 확인
+        Long findLoginId = loginService.checkMember(request);
+        if (!findLoginId.equals(loginId)) {
+            log.info("잘못된 접근");
+            return;
+        }
+
+        // 노트에서 회원 삭제
+        Optional<Note> findNote = findOne(noteId);
+        if(findNote.isEmpty()) {
+            log.info("노트 없음");
+            return;
+        }
+        Note note = findNote.get();
+
+        Optional<MemberNote> result = note.getMemberNote().stream()
+                .filter(mn -> mn.getMember().getId().equals(deleteMemberId))
+                .findFirst();
+        result.ifPresent(noteRepository::removeMemberNote);
     }
 }

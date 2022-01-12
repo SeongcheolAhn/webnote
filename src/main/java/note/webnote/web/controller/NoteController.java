@@ -2,67 +2,63 @@ package note.webnote.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import note.webnote.domain.MemberNote;
 import note.webnote.domain.Note;
-import note.webnote.domain.Permission;
-import note.webnote.repository.NoteRepository;
 import note.webnote.web.dto.EditNoteDto;
 import note.webnote.web.dto.EditPermissionDto;
+import note.webnote.web.dto.ParticipantsDto;
 import note.webnote.web.dto.ViewNoteDto;
-import note.webnote.web.dto.ViewNoteParticipantDto;
 import note.webnote.web.form.EditNoteForm;
 import note.webnote.web.form.NoteSaveForm;
-import note.webnote.web.intercptor.SessionMember;
+import note.webnote.web.service.LoginService;
 import note.webnote.web.service.NoteService;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("{memberId}/notes")
+@RequestMapping("{loginId}/notes")
 public class NoteController {
 
     private final NoteService noteService;
+    private final LoginService loginService;
 
     @GetMapping("/{noteId}")
     public String note(@PathVariable Long noteId,
-                       @PathVariable Long memberId,
+                       @PathVariable Long loginId,
                        Model model) {
         log.info("[GET]    findNote");
-        ViewNoteDto dto = noteService.findNote(noteId, memberId);
+        ViewNoteDto dto = noteService.findNote(noteId, loginId);
         model.addAttribute("viewNoteDto", dto);
         return "notes/viewNote";
     }
 
     @GetMapping("/new")
-    public String createNoteForm(@PathVariable Long memberId, Model model) {
+    public String createNoteForm(@PathVariable Long loginId, Model model) {
         log.info("[GET]    createNoteForm");
         NoteSaveForm noteSaveForm = new NoteSaveForm();
-        noteSaveForm.setMemberId(memberId);
+        noteSaveForm.setMemberId(loginId);
         model.addAttribute("noteSaveForm", noteSaveForm);
         return "notes/addNoteForm";
     }
 
     @PostMapping("/new")
     public String createNote(@ModelAttribute NoteSaveForm form,
-                             @PathVariable Long memberId) {
+                             @PathVariable Long loginId) {
         log.info("[POST]    createNote");
         Long noteId = noteService.saveMemberNoteWithNote(form);
-        String redirectUrl = "/" + memberId + "/notes/" + noteId;
+        String redirectUrl = "/" + loginId + "/notes/" + noteId;
         return "redirect:" + redirectUrl;
     }
 
     @GetMapping("/{noteId}/edit")
     public String editNoteForm(@PathVariable Long noteId,
-                               @PathVariable Long memberId,
+                               @PathVariable Long loginId,
                                Model model, HttpServletRequest request) {
         log.info("[GET]    editNoteForm");
 
@@ -75,19 +71,19 @@ public class NoteController {
 
 
         model.addAttribute("editNoteForm", new EditNoteForm(note));
-        model.addAttribute("editNoteDto", new EditNoteDto(note, memberId, noteService.findHost(note, memberId)));
+        model.addAttribute("editNoteDto", new EditNoteDto(note, loginId, noteService.findHost(note, loginId)));
         return "notes/editNoteForm";
     }
 
     @PostMapping("/{noteId}/edit")
     public String editNote(@ModelAttribute EditNoteForm editNoteForm,
-                           @PathVariable Long memberId,
+                           @PathVariable Long loginId,
                            @PathVariable Long noteId) {
         log.info("[POST]    editNote");
 
         noteService.saveEditNote(noteId, editNoteForm);
 
-        String redirectUrl = "/" + memberId + "/notes/" + noteId;
+        String redirectUrl = "/" + loginId + "/notes/" + noteId;
         return "redirect:" + redirectUrl;
     }
 
@@ -108,7 +104,7 @@ public class NoteController {
     }
 
     @PostMapping("/{noteId}/edit/{editMemberId}")
-    public String editPermission(@PathVariable Long memberId,
+    public String editPermission(@PathVariable Long loginId,
                                  @PathVariable Long editMemberId,
                                  @PathVariable Long noteId,
                                  @ModelAttribute EditPermissionDto editPermissionDto) {
@@ -116,7 +112,39 @@ public class NoteController {
 
         noteService.editPermission(noteId, editMemberId, editPermissionDto);
 
-        String redirectURL ="/" + memberId + "/notes/" + noteId;
+        String redirectURL ="/" + loginId + "/notes/" + noteId;
+        return "redirect:" + redirectURL;
+    }
+
+    /**
+     * 참여자 수정 페이지
+     */
+    @GetMapping("/{noteId}/edit/participants")
+    public String editParticipants(@PathVariable Long loginId,
+                                   @PathVariable Long noteId,
+                                   Model model, HttpServletRequest request) {
+        // 권한 체크
+        Long findLoginId = loginService.checkMember(request);
+        if(!Objects.equals(findLoginId, loginId)) {
+            return "home";
+        }
+
+
+        ParticipantsDto participants = noteService.participants(noteId, loginId);
+        model.addAttribute("participantsDto", participants);
+        return "notes/participants";
+    }
+
+    /**
+     * 참여자 삭제
+     */
+    @GetMapping("/{noteId}/edit/delete/{deleteMemberId}")
+    public String deleteMember(@PathVariable Long loginId,
+                               @PathVariable Long noteId,
+                               @PathVariable Long deleteMemberId,
+                               HttpServletRequest request) {
+        noteService.deleteMember(loginId, noteId, deleteMemberId, request);
+        String redirectURL = "/" + loginId + "/notes/" + noteId;
         return "redirect:" + redirectURL;
     }
 }

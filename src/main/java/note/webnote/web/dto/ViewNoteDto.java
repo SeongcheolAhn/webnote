@@ -22,6 +22,7 @@ public class ViewNoteDto {
     private String hostMemberName;
     private Long hostMemberId;
     private boolean isWrite;
+    private boolean isHost;
 
 
     public ViewNoteDto(Note note, Long loginId) {
@@ -50,6 +51,7 @@ public class ViewNoteDto {
                 .getPermission();
 
         isWrite = loginId.equals(hostMemberId) || loginMemberPermission.equals(Permission.READ_WRITE);
+        isHost = loginId.equals(hostMemberId);
     }
 
 }
