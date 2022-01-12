@@ -51,7 +51,7 @@ public class NoteController {
     public String createNote(@ModelAttribute NoteSaveForm form,
                              @PathVariable Long loginId) {
         log.info("[POST]    createNote");
-        Long noteId = noteService.saveMemberNoteWithNote(form);
+        Long noteId = noteService.saveMemberNoteWithNote(form, loginId);
         String redirectUrl = "/" + loginId + "/notes/" + noteId;
         return "redirect:" + redirectUrl;
     }

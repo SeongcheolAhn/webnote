@@ -49,7 +49,7 @@ public class NoteService {
 
     /* Note 엔티티와 MemberNote 모두 저장 */
     @Transactional
-    public Long saveMemberNoteWithNote(NoteSaveForm form) {
+    public Long saveMemberNoteWithNote(NoteSaveForm form, Long loginId) {
         Note note = new Note(form.getTitle(), form.getContent());
         Long noteId = saveNote(note);
 
@@ -57,7 +57,7 @@ public class NoteService {
         form.setNoteId(noteId);
 
         // MemberNote 저장
-        Optional<Member> member = memberRepository.findById(form.getMemberId());
+        Optional<Member> member = memberRepository.findById(loginId);
         if (member.isEmpty()) {
             log.info("존재하지 않는 회원입니다.");
             return null;
