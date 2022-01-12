@@ -7,6 +7,7 @@ import note.webnote.web.dto.EditNoteDto;
 import note.webnote.web.dto.EditPermissionDto;
 import note.webnote.web.dto.ParticipantsDto;
 import note.webnote.web.dto.ViewNoteDto;
+import note.webnote.web.form.AddParticipantForm;
 import note.webnote.web.form.EditNoteForm;
 import note.webnote.web.form.NoteSaveForm;
 import note.webnote.web.service.LoginService;
@@ -144,6 +145,41 @@ public class NoteController {
                                @PathVariable Long deleteMemberId,
                                HttpServletRequest request) {
         noteService.deleteMember(loginId, noteId, deleteMemberId, request);
+        String redirectURL = "/" + loginId + "/notes/" + noteId;
+        return "redirect:" + redirectURL;
+    }
+
+    /**
+     * 참여자 추가
+     */
+    @GetMapping("/{noteId}/edit/participants/new")
+    public String addParticipantForm(@PathVariable Long loginId,
+                                 @PathVariable Long noteId,
+                                 HttpServletRequest request, Model model) {
+
+        // 정상 회원 확인
+        if (!loginService.check(request, loginId)) {
+            return "home";
+        }
+
+        AddParticipantForm addParticipantForm = new AddParticipantForm(loginId, noteId);
+        model.addAttribute("addParticipantForm", addParticipantForm);
+        return "notes/addParticipant";
+    }
+
+    @PostMapping("/{noteId}/edit/participants/new")
+    public String addParticipant(@PathVariable Long loginId,
+                                 @PathVariable Long noteId,
+                                 @ModelAttribute AddParticipantForm addParticipantForm,
+                                 HttpServletRequest request) {
+
+        // 정상 회원 확인
+        if (!loginService.check(request, loginId)) {
+            return "home";
+        }
+
+        noteService.addParticipant(loginId, noteId, addParticipantForm);
+
         String redirectURL = "/" + loginId + "/notes/" + noteId;
         return "redirect:" + redirectURL;
     }

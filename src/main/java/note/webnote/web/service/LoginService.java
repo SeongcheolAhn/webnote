@@ -38,4 +38,16 @@ public class LoginService {
         SessionMember loginMember = (SessionMember) session.getAttribute("LoginMember");
         return loginMember.getId();
     }
+
+    /**
+     * 로그인 회원과 접속한 url이 같은지 확인
+     */
+    public boolean check(HttpServletRequest request, Long loginId) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return false;
+        }
+        SessionMember loginMember = (SessionMember) session.getAttribute("LoginMember");
+        return loginMember.getId().equals(loginId);
+    }
 }

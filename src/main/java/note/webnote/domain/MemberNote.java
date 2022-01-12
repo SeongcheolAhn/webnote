@@ -28,6 +28,10 @@ public class MemberNote {
         this.member = member;
         this.note = note;
         this.permission = permission;
+
+        // 양방향 저장
+        note.getMemberNote().add(this);
+        member.getMemberNotes().add(this);
     }
 
     public void editPermission(Permission permission) {

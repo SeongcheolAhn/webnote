@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header ('참여자 목록')">
     <meta charset="UTF-8">
@@ -30,6 +28,10 @@
         </tr>
         </tbody>
     </table>
+    <button th:onclick=
+                    "|location.href='@{/{memberId}/notes/{noteId}/edit/participants/new (memberId=${participantsDto.loginId}, noteId=${participantsDto.noteId})}'|"
+            type="submit" class="btn btn-primary">추가
+    </button>
 </div>
 
 </body>

@@ -12,8 +12,10 @@ import note.webnote.web.dto.EditPermissionDto;
 import note.webnote.web.dto.ParticipantsDto;
 import note.webnote.web.dto.ViewNoteParticipantDto;
 import note.webnote.web.dto.ViewNoteDto;
+import note.webnote.web.form.AddParticipantForm;
 import note.webnote.web.form.EditNoteForm;
 import note.webnote.web.form.NoteSaveForm;
+import note.webnote.web.form.PermissionNotHostEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -166,5 +168,41 @@ public class NoteService {
                 .filter(mn -> mn.getMember().getId().equals(deleteMemberId))
                 .findFirst();
         result.ifPresent(noteRepository::removeMemberNote);
+    }
+
+    @Transactional
+    public void addParticipant(Long loginId, Long noteId, AddParticipantForm addParticipantForm) {
+        // 노트 찾기
+        Optional<Note> findNote = findOne(noteId);
+        if(findNote.isEmpty()) {
+            log.info("참여자 추가 실패 note = {} 가 존재하지 않습니다.", addParticipantForm.getNoteId());
+            return;
+        }
+        Note note = findNote.get();
+        log.info("note = {}", note);
+
+        // 멤버 찾기
+        Optional<Member> findAddMember = memberRepository.findByMemberName(addParticipantForm.getMemberId());
+        if(findAddMember.isEmpty()) {
+            log.info("참여자 추가 실패 member = {} 가 존재하지 않습니다.", addParticipantForm.getMemberId());
+            return;
+        }
+        Member member = findAddMember.get();
+        log.info("member = {}", member);
+
+        // 권한
+        Permission permission = Permission.READ_ONLY;
+
+        String findPermission = addParticipantForm.getPermission().toString();
+
+        for (Permission p : Permission.values()) {
+            if (findPermission.equals(p.toString())) {
+                permission = p;
+            }
+        }
+
+        // 멤버노트 저장
+        noteRepository.saveMemberNote(new MemberNote(member, note, permission));
+
     }
 }

@@ -35,4 +35,10 @@ public class MemberRepository {
         return em.createQuery("select m from Member m", Member.class)
                 .getResultList();
     }
+
+    public Optional<Member> findByMemberName(String memberName) {
+        return findByAll().stream()
+                .filter(m -> m.getName().equals(memberName))
+                .findFirst();
+    }
 }

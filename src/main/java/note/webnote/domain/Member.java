@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,7 @@ public class Member {
     private LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "member")
-    private List<MemberNote> memberNotes;
+    private List<MemberNote> memberNotes = new ArrayList<>();
 
     public Member(String name, String loginId, String password) {
         this.name = name;

@@ -54,6 +54,9 @@ public class InitDB {
             memberService.join(memberC);
             MemberNote memberNoteC = new MemberNote(memberC, note, Permission.READ_WRITE);
             em.persist(memberNoteC);
+
+            Member memberD = new Member("memberD", "loginD", "1234");
+            memberService.join(memberD);
         }
     }
 }
