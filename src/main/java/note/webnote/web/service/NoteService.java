@@ -8,6 +8,7 @@ import note.webnote.domain.Note;
 import note.webnote.domain.Permission;
 import note.webnote.repository.MemberRepository;
 import note.webnote.repository.NoteRepository;
+import note.webnote.repository.NoteRepositoryOld;
 import note.webnote.web.dto.EditPermissionDto;
 import note.webnote.web.dto.ParticipantsDto;
 import note.webnote.web.dto.ViewNoteDto;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class NoteService {
 
+    private final NoteRepositoryOld noteRepositoryOld;
     private final NoteRepository noteRepository;
     private final MemberRepository memberRepository;
     private final LoginService loginService;
@@ -48,12 +50,10 @@ public class NoteService {
 
     /* Note 엔티티와 MemberNote 모두 저장 */
     @Transactional
-    public Long saveMemberNoteWithNote(NoteSaveForm form, Long loginId) {
+    public Long saveNoteAndMemberNote(NoteSaveForm form, Long loginId) {
+        // 노트 저장
         Note note = new Note(form.getTitle(), form.getContent());
-        Long noteId = saveNote(note);
-
-        // form 저장 마무리
-        form.setNoteId(noteId);
+        saveNote(note);
 
         // MemberNote 저장
         Optional<Member> member = memberRepository.findById(loginId);
@@ -64,7 +64,7 @@ public class NoteService {
 
         MemberNote memberNote = new MemberNote(member.get(), note, Permission.HOST);
         noteRepository.saveMemberNote(memberNote);
-        return noteId;
+        return note.getId();
     }
 
 
@@ -74,7 +74,7 @@ public class NoteService {
     public ViewNoteDto findNote(Long noteId, Long hostId) {
 
         Optional<Note> findNote = noteRepository.findById(noteId);
-        if(findNote.isEmpty()) {
+        if (findNote.isEmpty()) {
             return null;
         }
 
@@ -100,7 +100,7 @@ public class NoteService {
      */
     public EditPermissionDto findEditPermissionDto(Long editMemberId, Long noteId) {
         Optional<Note> findNote = findOne(noteId);
-        if(findNote.isEmpty()) {
+        if (findNote.isEmpty()) {
             return null;
         }
         Note note = findNote.get();
@@ -132,7 +132,7 @@ public class NoteService {
      */
     public ParticipantsDto participants(Long noteId, Long loginId) {
         Optional<Note> findNote = findOne(noteId);
-        if(findNote.isEmpty()) {
+        if (findNote.isEmpty()) {
             log.info("노트 없음");
         }
         Note note = findNote.get();
@@ -144,7 +144,7 @@ public class NoteService {
      */
     @Transactional
     public void deleteMember(Long loginId, Long noteId, Long deleteMemberId
-    , HttpServletRequest request) {
+            , HttpServletRequest request) {
 
         // 삭제 권한 확인
         Long findLoginId = loginService.checkMember(request);
@@ -155,7 +155,7 @@ public class NoteService {
 
         // 노트에서 회원 삭제
         Optional<Note> findNote = findOne(noteId);
-        if(findNote.isEmpty()) {
+        if (findNote.isEmpty()) {
             log.info("노트 없음");
             return;
         }
@@ -164,14 +164,14 @@ public class NoteService {
         Optional<MemberNote> result = note.getMemberNote().stream()
                 .filter(mn -> mn.getMember().getId().equals(deleteMemberId))
                 .findFirst();
-        result.ifPresent(noteRepository::removeMemberNote);
+        result.ifPresent(noteRepository::removeMemberInNote);
     }
 
     @Transactional
     public void addParticipant(Long loginId, Long noteId, AddParticipantForm addParticipantForm) {
         // 노트 찾기
         Optional<Note> findNote = findOne(noteId);
-        if(findNote.isEmpty()) {
+        if (findNote.isEmpty()) {
             log.info("참여자 추가 실패 note = {} 가 존재하지 않습니다.", addParticipantForm.getNoteId());
             return;
         }
@@ -180,7 +180,7 @@ public class NoteService {
 
         // 멤버 찾기
         Optional<Member> findAddMember = memberRepository.findByName(addParticipantForm.getMemberName());
-        if(findAddMember.isEmpty()) {
+        if (findAddMember.isEmpty()) {
             log.info("참여자 추가 실패 member = {} 가 존재하지 않습니다.", addParticipantForm.getMemberName());
             return;
         }

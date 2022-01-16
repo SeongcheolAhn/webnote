@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import note.webnote.domain.Member;
 import note.webnote.repository.MemberRepository;
-import note.webnote.repository.NoteRepository;
+import note.webnote.repository.NoteRepositoryOld;
 import note.webnote.web.dto.MemberHomeDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final NoteRepository noteRepository;
+    private final NoteRepositoryOld noteRepositoryOld;
 
     // 회원 가입
     @Transactional
@@ -52,6 +52,6 @@ public class MemberService {
             log.info("Member 조회 불가능");
             return null;
         }
-        return noteRepository.findAllNoteByMember(findMember.get());
+        return new MemberHomeDto(findMember.get());
     }
 }
