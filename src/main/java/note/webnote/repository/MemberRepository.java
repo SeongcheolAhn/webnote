@@ -1,44 +1,16 @@
 package note.webnote.repository;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import note.webnote.domain.Member;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.Optional;
 
-@Repository
-@RequiredArgsConstructor
-@Slf4j
-public class MemberRepository {
 
-    private final EntityManager em;
+public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    public void save(Member member) {
-        em.persist(member);
-    }
+    Optional<Member> findById(Long id);
 
-    public Optional<Member> findById(Long id) {
-        return Optional.ofNullable(em.find(Member.class, id));
-    }
+    Optional<Member> findByLoginId(String loginId);
 
-    public Optional<Member> findByLoginId(String memberLoginId) {
-        log.info("findByLoginId");
-        return findByAll().stream()
-                .filter(m -> m.getLoginId().equals(memberLoginId))
-                .findFirst();
-    }
-
-    public List<Member> findByAll() {
-        return em.createQuery("select m from Member m", Member.class)
-                .getResultList();
-    }
-
-    public Optional<Member> findByMemberName(String memberName) {
-        return findByAll().stream()
-                .filter(m -> m.getName().equals(memberName))
-                .findFirst();
-    }
+    Optional<Member> findByName(String name);
 }

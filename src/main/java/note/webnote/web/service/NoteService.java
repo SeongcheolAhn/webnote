@@ -10,17 +10,14 @@ import note.webnote.repository.MemberRepository;
 import note.webnote.repository.NoteRepository;
 import note.webnote.web.dto.EditPermissionDto;
 import note.webnote.web.dto.ParticipantsDto;
-import note.webnote.web.dto.ViewNoteParticipantDto;
 import note.webnote.web.dto.ViewNoteDto;
 import note.webnote.web.form.AddParticipantForm;
 import note.webnote.web.form.EditNoteForm;
 import note.webnote.web.form.NoteSaveForm;
-import note.webnote.web.form.PermissionNotHostEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -182,7 +179,7 @@ public class NoteService {
         log.info("note = {}", note);
 
         // 멤버 찾기
-        Optional<Member> findAddMember = memberRepository.findByMemberName(addParticipantForm.getMemberId());
+        Optional<Member> findAddMember = memberRepository.findByName(addParticipantForm.getMemberId());
         if(findAddMember.isEmpty()) {
             log.info("참여자 추가 실패 member = {} 가 존재하지 않습니다.", addParticipantForm.getMemberId());
             return;

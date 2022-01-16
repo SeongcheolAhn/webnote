@@ -4,13 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import note.webnote.domain.Member;
 import note.webnote.repository.MemberRepository;
-import note.webnote.web.form.LoginForm;
 import note.webnote.web.intercptor.SessionMember;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

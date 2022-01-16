@@ -42,7 +42,7 @@ public class MemberService {
 
     // 모든 회원 조회
     public List<Member> findMembers() {
-        return memberRepository.findByAll();
+        return memberRepository.findAll();
     }
 
     // 회원의 노트 전부 조회

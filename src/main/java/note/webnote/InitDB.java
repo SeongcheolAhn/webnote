@@ -5,7 +5,6 @@ import note.webnote.domain.Member;
 import note.webnote.domain.MemberNote;
 import note.webnote.domain.Note;
 import note.webnote.domain.Permission;
-import note.webnote.repository.MemberRepository;
 import note.webnote.web.service.MemberService;
 import note.webnote.web.service.NoteService;
 import org.springframework.stereotype.Component;
