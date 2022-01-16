@@ -37,7 +37,7 @@
                 <td th:text="${participant.memberName}"></td>
                 <td th:text="${participant.permission}"
                     th:onclick=
-                            "|location.href='@{/{memberId}/notes/{noteId}/edit/{editMemberId} (memberId=${editNoteDto.loginId}, noteId=${editNoteDto.noteId}, editId=${participant.memberId})}'|"
+                            "|location.href='@{/{memberId}/notes/{noteId}/edit/{editMemberId} (memberId=${editNoteDto.loginId}, noteId=${editNoteDto.noteId}, editMemberId=${participant.memberId})}'|"
                     style="cursor: pointer;color: #0c63e4"></td>
             </tr>
             </tbody>
