@@ -179,9 +179,9 @@ public class NoteService {
         log.info("note = {}", note);
 
         // 멤버 찾기
-        Optional<Member> findAddMember = memberRepository.findByName(addParticipantForm.getMemberId());
+        Optional<Member> findAddMember = memberRepository.findByName(addParticipantForm.getMemberName());
         if(findAddMember.isEmpty()) {
-            log.info("참여자 추가 실패 member = {} 가 존재하지 않습니다.", addParticipantForm.getMemberId());
+            log.info("참여자 추가 실패 member = {} 가 존재하지 않습니다.", addParticipantForm.getMemberName());
             return;
         }
         Member member = findAddMember.get();

@@ -9,7 +9,7 @@ public class AddParticipantForm {
     private Long loginId;
     private Long noteId;
 
-    private String memberId;
+    private String memberName;
     private PermissionNotHostEnum permission;
 
     public AddParticipantForm(Long loginId, Long noteId) {

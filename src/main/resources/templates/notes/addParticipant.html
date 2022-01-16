@@ -11,15 +11,15 @@
         <h1 class="h3 mb-3 fw-normal">Note</h1>
 
         <div class="mb-3">
-            <label th:for="memberId" class="form-label">회원 아이디</label>
-            <input type="text" id="name" class="form-control" th:field="*{memberId}">
+            <label th:for="memberName" class="form-label">회원 이름</label>
+            <input type="text" id="name" class="form-control" th:field="*{memberName}">
         </div>
 
         <label th:for="permission" class="form-label">권한</label>
         <select th:field="*{permission}" aria-label="permission" class="form-control">
             <option th:each="permission : ${T(note.webnote.web.form.PermissionNotHostEnum).values()}" th:value="${permission}" th:text="${permission}"></option>
         </select>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">추가</button>
     </form>
 </div>
 </body>
