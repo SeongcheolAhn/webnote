@@ -27,6 +27,8 @@ dependencies {
 	// JPA가 생성한 쿼리의 파라미터 출력
 	implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0")
 
+	implementation "org.springframework.boot:spring-boot-starter-security"
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 
