@@ -6,6 +6,8 @@ import note.webnote.domain.Member;
 import note.webnote.repository.MemberRepository;
 import note.webnote.repository.NoteRepositoryOld;
 import note.webnote.web.dto.MemberHomeDto;
+import note.webnote.web.form.MemberSaveForm;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +22,15 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final NoteRepositoryOld noteRepositoryOld;
+    private final PasswordEncoder passwordEncoder;
 
     // 회원 가입
     @Transactional
     public Long join(Member member) {
+
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(member.getPassword());
+        member.setEncodedPassword(encodedPassword);
 
         // 중복 검증
         Optional<Member> findMember = memberRepository.findByLoginId(member.getLoginId());

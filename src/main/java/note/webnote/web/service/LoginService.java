@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import note.webnote.domain.Member;
 import note.webnote.repository.MemberRepository;
 import note.webnote.web.intercptor.SessionMember;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,13 +18,22 @@ import javax.servlet.http.HttpSession;
 public class LoginService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Member login(String loginId, String password) {
         log.info("login service");
-        return memberRepository.findByLoginId(loginId)
-                .filter(m -> m.getPassword().equals(password))
-                .orElse(null);
+        Optional<Member> findMember = memberRepository.findByLoginId(loginId);
+        if (findMember.isEmpty()) {
+            return null;
+        }
+        Member member = findMember.get();
 
+        boolean loginResult = passwordEncoder.matches(password, member.getPassword());
+        if (loginResult) {
+            return member;
+        } else {
+            return null;
+        }
     }
 
     /**

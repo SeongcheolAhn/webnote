@@ -6,6 +6,7 @@ import note.webnote.domain.Member;
 import note.webnote.web.form.MemberSaveForm;
 import note.webnote.web.intercptor.SessionMember;
 import note.webnote.web.service.MemberService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 public class MemberController {
 
     private final MemberService memberService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping
     public String members() {

@@ -32,4 +32,8 @@ public class Member {
         this.password = password;
         this.createdDate = LocalDateTime.now();
     }
+
+    public void setEncodedPassword(String encodedPassword) {
+        password = encodedPassword;
+    }
 }
