@@ -167,13 +167,17 @@ public class NoteService {
         result.ifPresent(noteRepository::removeMemberInNote);
     }
 
+    /**
+     * 참여자 추가
+     * @return 실패시 에러 메시지, 성공시 "success" 반환
+     */
     @Transactional
-    public void addParticipant(Long loginId, Long noteId, AddParticipantForm addParticipantForm) {
+    public String addParticipant(Long loginId, Long noteId, AddParticipantForm addParticipantForm) {
         // 노트 찾기
         Optional<Note> findNote = findOne(noteId);
         if (findNote.isEmpty()) {
             log.info("참여자 추가 실패 note = {} 가 존재하지 않습니다.", addParticipantForm.getNoteId());
-            return;
+            return "노트가 존재하지 않습니다.";
         }
         Note note = findNote.get();
         log.info("note = {}", note);
@@ -182,7 +186,7 @@ public class NoteService {
         Optional<Member> findAddMember = memberRepository.findByName(addParticipantForm.getMemberName());
         if (findAddMember.isEmpty()) {
             log.info("참여자 추가 실패 member = {} 가 존재하지 않습니다.", addParticipantForm.getMemberName());
-            return;
+            return "회원이 존재하지 않습니다.";
         }
         Member member = findAddMember.get();
         log.info("member = {}", member);
@@ -200,6 +204,6 @@ public class NoteService {
 
         // 멤버노트 저장
         noteRepository.saveMemberNote(new MemberNote(member, note, permission));
-
+        return "success";
     }
 }

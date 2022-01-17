@@ -12,11 +12,11 @@
         <h1 class="h3 mb-3 fw-normal">Note</h1>
 
         <div class="mb-3">
-            <label th:for="name" class="form-label">제목</label>
+            <label th:for="title" class="form-label">제목</label>
             <input type="text" id="name" class="form-control" th:field="*{title}">
         </div>
         <div class="mb-3">
-            <label th:for="loginId" class="form-label">내용</label>
+            <label th:for="content" class="form-label">내용</label>
             <textarea id="content" class="form-control" th:field="*{content}"></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>

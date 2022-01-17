@@ -10,6 +10,8 @@
     <form action="" th:action th:object="${addParticipantForm}" method="post">
         <h1 class="h3 mb-3 fw-normal">Note</h1>
 
+        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">오류 메시지</p>
+
         <div class="mb-3">
             <label th:for="memberName" class="form-label">회원 이름</label>
             <input type="text" id="name" class="form-control" th:field="*{memberName}">
