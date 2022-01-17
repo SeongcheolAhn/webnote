@@ -79,13 +79,13 @@ public class NoteController {
 
     @PostMapping("/{noteId}/edit")
     public String editNote(@ModelAttribute EditNoteForm editNoteForm,
-                           @PathVariable Long loginId,
+                           @PathVariable Long loginMemberId,
                            @PathVariable Long noteId) {
         log.info("[POST]    editNote");
 
         noteService.saveEditNote(noteId, editNoteForm);
 
-        String redirectUrl = "/" + loginId + "/notes/" + noteId;
+        String redirectUrl = "/" + loginMemberId + "/notes/" + noteId;
         return "redirect:" + redirectUrl;
     }
 
