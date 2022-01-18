@@ -1,17 +1,27 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/webnote
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    #MySQL
+    url: jdbc:mysql://localhost:3306/webnote?serverTimezone=UTC
+    username: webnote_user
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    # h2 설정
+#    url: jdbc:h2:tcp://localhost/~/webnote
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
+    #MySQL
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
 
 logging.level:
   org.hibernate.SQL: debug
