@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +37,7 @@ public class MemberController {
     }
 
     @PostMapping("/new")
-    public String createMember(@ModelAttribute MemberSaveForm memberSaveForm, BindingResult bindingResult) {
+    public String createMember(@Validated @ModelAttribute MemberSaveForm memberSaveForm, BindingResult bindingResult) {
 
         log.info("[POST]    createMember");
 
