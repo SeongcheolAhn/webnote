@@ -9,11 +9,14 @@ import note.webnote.repository.NoteRepositoryOld;
 import note.webnote.web.dto.MemberHomeCondition;
 import note.webnote.web.dto.MemberHomeDto;
 import note.webnote.web.dto.MemberHomeMemberNoteDto;
+import note.webnote.web.dto.PageDto;
 import note.webnote.web.form.MemberSaveForm;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,10 +60,12 @@ public class MemberService {
     }
 
     // 회원의 노트 전부 조회
-    public MemberHomeDto findNotes(Long memberId, MemberHomeCondition condition) {
+    public void findNotes(Long memberId, MemberHomeCondition condition, Pageable pageable, Model model) {
         // permission = HOST 조건이 있다면 권한이 HOST인 노트만 가져온다.
-        List<MemberHomeMemberNoteDto> memberNotes = noteRepository.findMemberNoteDto(memberId, condition);
+        Page<MemberHomeMemberNoteDto> memberNotes = noteRepository.findMemberNoteDto(memberId, condition, pageable);
 
-        return new MemberHomeDto(memberId, memberNotes);
+        model.addAttribute("memberHomeDto", new MemberHomeDto(memberId, memberNotes.getContent()));
+        model.addAttribute("pageDto",
+                new PageDto(memberNotes.getTotalPages(), memberNotes.getNumber(), condition.getPermission()));
     }
 }

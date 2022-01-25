@@ -3,6 +3,8 @@ package note.webnote.repository;
 import note.webnote.domain.MemberNote;
 import note.webnote.web.dto.MemberHomeCondition;
 import note.webnote.web.dto.MemberHomeMemberNoteDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,5 +14,5 @@ public interface MemberNoteRepository {
 
     void removeMemberInNote(MemberNote memberNote);
 
-    List<MemberHomeMemberNoteDto> findMemberNoteDto(Long memberId, MemberHomeCondition condition);
+    Page<MemberHomeMemberNoteDto> findMemberNoteDto(Long memberId, MemberHomeCondition condition, Pageable pageable);
 }

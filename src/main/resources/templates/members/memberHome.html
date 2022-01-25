@@ -40,6 +40,21 @@
         </tr>
         </tbody>
     </table>
+    <button th:if="${pageDto.pageNumber != 0 and !(pageDto.isHostPermission)}"
+            th:onclick="|location.href='@{{memberId} (memberId=${memberHomeDto.memberId}, page=${pageDto.pageNumber} - 1)}'|"
+            type="submit" class="btn btn-primary">이전 페이지</button>
+
+    <button th:if="${pageDto.pageNumber != 0 and pageDto.isHostPermission}"
+            th:onclick="|location.href='@{{memberId} (memberId=${memberHomeDto.memberId}, page=${pageDto.pageNumber} - 1, permission=host)}'|"
+            type="submit" class="btn btn-primary">이전 호스트 페이지</button>
+
+    <button th:if="${pageDto.hasNextPage and !(pageDto.isHostPermission)}"
+            th:onclick="|location.href='@{{memberId} (memberId=${memberHomeDto.memberId}, page=${pageDto.pageNumber} + 1)}'|"
+            type="submit" class="btn btn-primary" style="float: right">다음 페이지</button>
+
+    <button th:if="${pageDto.hasNextPage and pageDto.isHostPermission}"
+            th:onclick="|location.href='@{{memberId} (memberId=${memberHomeDto.memberId}, page=${pageDto.pageNumber} + 1, permission=host)}'|"
+            type="submit" class="btn btn-primary" style="float: right">다음 호스트 페이지</button>
 </div>
 
 </body>

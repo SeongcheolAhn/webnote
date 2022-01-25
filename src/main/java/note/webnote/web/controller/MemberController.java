@@ -7,6 +7,8 @@ import note.webnote.web.dto.MemberHomeCondition;
 import note.webnote.web.form.MemberSaveForm;
 import note.webnote.web.intercptor.SessionMember;
 import note.webnote.web.service.MemberService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,7 +56,9 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}")
-    public String memberHome(@PathVariable Long memberId, MemberHomeCondition condition,
+    public String memberHome(@PathVariable Long memberId,
+                             MemberHomeCondition condition,
+                             @PageableDefault(size = 5) Pageable pageable,
                              Model model, HttpServletRequest request) {
 
         // 본인이 맞는지 확인
@@ -66,7 +70,7 @@ public class MemberController {
             return "home";
         }
 
-        model.addAttribute("memberHomeDto", memberService.findNotes(memberId, condition));
+        memberService.findNotes(memberId, condition, pageable, model);
         return "members/memberHome";
     }
 

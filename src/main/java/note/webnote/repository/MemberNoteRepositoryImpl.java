@@ -2,6 +2,7 @@ package note.webnote.repository;
 
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import note.webnote.domain.MemberNote;
@@ -11,11 +12,15 @@ import note.webnote.web.dto.MemberHomeCondition;
 import note.webnote.web.dto.MemberHomeMemberNoteDto;
 import note.webnote.web.dto.QMemberHomeMemberNoteDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.querydsl.core.types.ExpressionUtils.count;
 import static note.webnote.domain.QMember.member;
 import static note.webnote.domain.QMemberNote.*;
 import static note.webnote.domain.QNote.*;
@@ -49,8 +54,8 @@ public class MemberNoteRepositoryImpl implements MemberNoteRepository {
      * 회원의 노트 목록 조회
      */
     @Override
-    public List<MemberHomeMemberNoteDto> findMemberNoteDto(Long memberId, MemberHomeCondition condition) {
-        return queryFactory
+    public Page<MemberHomeMemberNoteDto> findMemberNoteDto(Long memberId, MemberHomeCondition condition, Pageable pageable) {
+        List<MemberHomeMemberNoteDto> content = queryFactory
                 .select(new QMemberHomeMemberNoteDto(
                         note.id,
                         note.title,
@@ -63,7 +68,20 @@ public class MemberNoteRepositoryImpl implements MemberNoteRepository {
                         memberEq(memberId),
                         permissionHOSTEq(condition.getPermission())
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        // 카운트 쿼리 분리
+        JPAQuery<Long> countQuery = queryFactory
+                .select(count(memberNote))
+                .from(memberNote)
+                .where(
+                        memberEq(memberId),
+                        permissionHOSTEq(condition.getPermission())
+                );
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
     private BooleanExpression memberEq(Long memberId) {

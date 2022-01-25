@@ -10,6 +10,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -70,14 +74,17 @@ public class QuerydslTest {
         MemberNote memberNoteC = new MemberNote(memberC, note, Permission.READ_ONLY);
         noteRepository.saveMemberNote(memberNoteC);
 
+        // Pageable
+        PageRequest pageRequest = PageRequest.of(0, 5);
+
         // when
         MemberHomeCondition condition = new MemberHomeCondition();
         condition.setPermission("HOST");
 
-        List<MemberHomeMemberNoteDto> result = noteRepository.findMemberNoteDto(memberA.getId(), condition);
+        Page<MemberHomeMemberNoteDto> result = noteRepository.findMemberNoteDto(memberA.getId(), condition, pageRequest);
 
         // then
-        Assertions.assertThat(result.size()).isEqualTo(1);
+        Assertions.assertThat(result.getContent().size()).isEqualTo(1);
 
     }
 }
