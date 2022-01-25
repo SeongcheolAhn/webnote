@@ -5,6 +5,8 @@ import note.webnote.domain.Member;
 import note.webnote.domain.MemberNote;
 import note.webnote.domain.Note;
 import note.webnote.domain.Permission;
+import note.webnote.repository.MemberNoteRepository;
+import note.webnote.repository.NoteRepository;
 import note.webnote.web.service.MemberService;
 import note.webnote.web.service.NoteService;
 import org.springframework.stereotype.Component;
@@ -32,30 +34,49 @@ public class InitDB {
 
         private final MemberService memberService;
         private final NoteService noteService;
+        private final NoteRepository noteRepository;
         private final EntityManager em;
 
+
         public void init() {
-            Member member = new Member("memberA", "loginA", "1234");
-            memberService.join(member);
 
-            Note note = new Note("NoteA", "contentA");
-            noteService.saveNote(note);
+            Note secondPrevNote = null;
+            Note prevNote = null;
 
-            MemberNote memberNote = new MemberNote(member, note, Permission.HOST);
-            em.persist(memberNote);
+            /**
+             * 100명의 회원과 100개의 노트 생성
+             * 전 회원의 노트를 READ_WRITE
+             * 전전 회원읜 노트를 READ_ONLY 할 수 있다.
+             *
+             * 예시)
+             * member10
+             * member9의 노트 -> read_write
+             * member8의 노트 -> read_only
+             */
+            for (int i = 1; i <= 100; i++) {
+                // member 100명 추가
+                Member member = new Member("member" + i, "login" + i, "1234");
+                memberService.join(member);
 
-            Member memberB = new Member("memberB", "loginB", "1234");
-            memberService.join(memberB);
-            MemberNote memberNoteB = new MemberNote(memberB, note, Permission.READ_ONLY);
-            em.persist(memberNoteB);
+                Note note = new Note("note" + i, "content" + i);
+                noteService.saveNote(note);
 
-            Member memberC = new Member("memberC", "loginC", "1234");
-            memberService.join(memberC);
-            MemberNote memberNoteC = new MemberNote(memberC, note, Permission.READ_WRITE);
-            em.persist(memberNoteC);
+                MemberNote memberNote = new MemberNote(member, note, Permission.HOST);
+                noteRepository.saveMemberNote(memberNote);
 
-            Member memberD = new Member("memberD", "loginD", "1234");
-            memberService.join(memberD);
+                if (i > 1) {
+                    MemberNote memberNoteREAD_WRITE = new MemberNote(member, prevNote, Permission.READ_WRITE);
+                    noteRepository.saveMemberNote(memberNoteREAD_WRITE);
+                }
+
+                if (i > 2) {
+                    MemberNote memberNoteREAD_ONLY = new MemberNote(member, secondPrevNote, Permission.READ_ONLY);
+                    noteRepository.saveMemberNote(memberNoteREAD_ONLY);
+                }
+
+                secondPrevNote = prevNote;
+                prevNote = note;
+            }
         }
-    }
+   }
 }
