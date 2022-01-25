@@ -38,4 +38,8 @@ public class Note {
     public void editContent(String content) {
         this.content = content;
     }
+
+    public void editLastModifiedDate(LocalDateTime editDateTime) {
+        this.lastModifiedDate = editDateTime;
+    }
 }

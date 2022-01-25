@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -43,9 +44,15 @@ public class NoteService {
 
     @Transactional
     public void saveEditNote(Long noteId, EditNoteForm editNoteForm) {
-        Note note = findOne(noteId).get();
+        Optional<Note> findNote = findOne(noteId);
+        if (findNote.isEmpty()) {
+            return;
+        }
+        Note note = findNote.get();
+
         note.editTitle(editNoteForm.getTitle());
         note.editContent(editNoteForm.getContent());
+        note.editLastModifiedDate(LocalDateTime.now());
     }
 
     /* Note 엔티티와 MemberNote 모두 저장 */

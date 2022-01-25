@@ -1,7 +1,7 @@
 spring:
   datasource:
     #MySQL
-    url: jdbc:mysql://localhost:3306/webnote?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/webnote
     username: webnote_user
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
