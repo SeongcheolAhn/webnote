@@ -4,9 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import note.webnote.domain.Member;
 import note.webnote.repository.MemberRepository;
+import note.webnote.repository.NoteRepository;
 import note.webnote.repository.NoteRepositoryOld;
+import note.webnote.web.dto.MemberHomeCondition;
 import note.webnote.web.dto.MemberHomeDto;
+import note.webnote.web.dto.MemberHomeMemberNoteDto;
 import note.webnote.web.form.MemberSaveForm;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +25,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final NoteRepositoryOld noteRepositoryOld;
+    private final NoteRepository noteRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 회원 가입
@@ -53,12 +57,10 @@ public class MemberService {
     }
 
     // 회원의 노트 전부 조회
-    public MemberHomeDto findNotes(Long memberId) {
-        Optional<Member> findMember = memberRepository.findById(memberId);
-        if (findMember.isEmpty()) {
-            log.info("Member 조회 불가능");
-            return null;
-        }
-        return new MemberHomeDto(findMember.get());
+    public MemberHomeDto findNotes(Long memberId, MemberHomeCondition condition) {
+        // permission = HOST 조건이 있다면 권한이 HOST인 노트만 가져온다.
+        List<MemberHomeMemberNoteDto> memberNotes = noteRepository.findMemberNoteDto(memberId, condition);
+
+        return new MemberHomeDto(memberId, memberNotes);
     }
 }

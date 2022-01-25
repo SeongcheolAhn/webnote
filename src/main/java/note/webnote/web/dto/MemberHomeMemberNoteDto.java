@@ -1,5 +1,6 @@
 package note.webnote.web.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import note.webnote.domain.MemberNote;
 import note.webnote.domain.Permission;
@@ -19,5 +20,13 @@ public class MemberHomeMemberNoteDto {
         this.title = memberNote.getNote().getTitle();
         this.lastModifiedDate = memberNote.getNote().getLastModifiedDate();
         this.permission = memberNote.getPermission();
+    }
+
+    @QueryProjection
+    public MemberHomeMemberNoteDto(Long noteId, String title, LocalDateTime lastModifiedDate, Permission permission) {
+        this.noteId = noteId;
+        this.title = title;
+        this.lastModifiedDate = lastModifiedDate;
+        this.permission = permission;
     }
 }

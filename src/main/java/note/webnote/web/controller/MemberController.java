@@ -3,6 +3,7 @@ package note.webnote.web.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import note.webnote.domain.Member;
+import note.webnote.web.dto.MemberHomeCondition;
 import note.webnote.web.form.MemberSaveForm;
 import note.webnote.web.intercptor.SessionMember;
 import note.webnote.web.service.MemberService;
@@ -53,7 +54,8 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}")
-    public String memberHome(@PathVariable Long memberId, Model model, HttpServletRequest request) {
+    public String memberHome(@PathVariable Long memberId, MemberHomeCondition condition,
+                             Model model, HttpServletRequest request) {
 
         // 본인이 맞는지 확인
         SessionMember loginMember = (SessionMember) request.getSession().getAttribute("LoginMember");
@@ -64,7 +66,7 @@ public class MemberController {
             return "home";
         }
 
-        model.addAttribute("memberHomeDto", memberService.findNotes(memberId));
+        model.addAttribute("memberHomeDto", memberService.findNotes(memberId, condition));
         return "members/memberHome";
     }
 

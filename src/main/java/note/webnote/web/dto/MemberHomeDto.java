@@ -18,4 +18,9 @@ public class MemberHomeDto {
                 .map(MemberHomeMemberNoteDto::new)
                 .collect(Collectors.toList());
     }
+
+    public MemberHomeDto(Long memberId, List<MemberHomeMemberNoteDto> memberHomeMemberNoteDtos) {
+        this.memberId = memberId;
+        this.memberHomeMemberNoteDtos = memberHomeMemberNoteDtos;
+    }
 }
