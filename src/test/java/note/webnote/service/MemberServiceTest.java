@@ -72,9 +72,9 @@ class MemberServiceTest {
     void 모든_회원조회() {
 
         // given
-        Member memberA = new Member("memberA", "loginA", "1234");
-        Member memberB = new Member("memberB", "loginB", "2345");
-        Member memberC = new Member("memberC", "loginC", "3456");
+        Member memberA = new Member("testMemberA", "loginA", "1234");
+        Member memberB = new Member("testMemberB", "loginB", "2345");
+        Member memberC = new Member("testMemberC", "loginC", "3456");
 
         memberService.join(memberA);
         memberService.join(memberB);
@@ -84,6 +84,8 @@ class MemberServiceTest {
         List<Member> findMembers = memberService.findMembers();
 
         // then
-//        assertThat(findMembers.size()).isEqualTo(3);
+        assertThat(findMembers)
+                .extracting("name")
+                .contains("testMemberA", "testMemberB", "testMemberC");
     }
 }
