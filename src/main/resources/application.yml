@@ -1,10 +1,15 @@
 spring:
   datasource:
-    #MySQL
-    url: jdbc:mysql://localhost:3306/webnote
+    url: jdbc:mariadb://rds엔드포인트/db명
     username: webnote_user
     password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.mariadb.jdbc.Driver
+  # MariaDB
+    #MySQL
+#    url: jdbc:mysql://localhost:3306/webnote
+#    username: webnote_user
+#    password: 1234
+#    driver-class-name: com.mysql.cj.jdbc.Driver
 
     # h2 설정
 #    url: jdbc:h2:tcp://localhost/~/webnote
@@ -19,9 +24,8 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
-    #MySQL
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    #MariaDB
+    database-platform: org.hibernate.dialect.MariaDB103Dialect
 
 logging.level:
   org.hibernate.SQL: debug
