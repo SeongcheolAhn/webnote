@@ -1,0 +1,22 @@
+language: java
+jdk:
+  - openjdk11
+
+branches:
+  only:
+    - main
+
+# Travis CI 서버의 Home
+# 해당 디렉토리에 의존성을 저장해서 다음 배포때는 다시 받지 않는다.
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
+
+script: "./gradlew clean build"
+
+# CI 실행 완료시 메일로 알람
+notifications:
+  email:
+    recipients:
+      - asc0323@gmail.com
