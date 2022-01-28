@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: test
+  datasource:
+    # h2 설정
+    url: jdbc:h2:tcp://localhost/~/webnote
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
+logging.level:
+  org.hibernate.SQL: debug
