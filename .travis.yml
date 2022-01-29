@@ -22,6 +22,11 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_1116e8e6e492_key -iv $encrypted_1116e8e6e492_iv
   -in application.yml.enc -out application.yml -d
 
+before_deploy:
+  - zip -r webnote
+  - mkdir -p deploy
+  - mv webnote.zip deploy/webnote.zip
+
 deploy:
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
@@ -30,6 +35,7 @@ deploy:
     region: ap-northeast-2
     skip_cleanup: true
     acl: private
+    local_dir: deploy
     wait-until-deployed: true
     on:
       repo: SeongcheolAhn/webnote #Github 주소
