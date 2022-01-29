@@ -29,7 +29,7 @@ deploy:
     bucket: webnote-deploy # S3 버킷
     region: ap-northeast-2
     skip_cleanup: true
-    acl: public_read
+    acl: private
     wait-until-deployed: true
     on:
       repo: SeongchoelAhn/webnote #Github 주소
