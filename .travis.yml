@@ -23,7 +23,7 @@ before_install:
   -in application.yml.enc -out application.yml -d
 
 before_deploy:
-  - zip -r webnote
+  - zip -r webnote ./*
   - mkdir -p deploy
   - mv webnote.zip deploy/webnote.zip
 
