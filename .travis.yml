@@ -32,5 +32,5 @@ deploy:
     acl: private
     wait-until-deployed: true
     on:
-      repo: SeongchoelAhn/webnote #Github 주소
+      repo: SeongcheolAhn/webnote #Github 주소
       branch: main
