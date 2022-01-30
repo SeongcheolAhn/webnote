@@ -24,7 +24,7 @@ before_deploy:
   - cp build/libs/*.jar before-deploy/
   - cd before-deploy && zip -r before-deploy * # before-deploy로 이동 후 전부 압축
   - cd ../ && mkdir -p deploy # deploy 디렉토리 생성
-  - mv before-deploy/webnote.zip deploy/webnote.zip
+  - mv before-deploy/before-deploy.zip deploy/webnote.zip
 
 deploy:
   - provider: s3
