@@ -205,6 +205,8 @@ public class NoteController {
         noteService.deleteNote(noteId);
         memberService.findNotes(loginMemberId, condition, pageable, model);
 
-        return "members/memberHome";
+        String redirectURL = "/members/" + loginMemberId;
+
+        return "redirect:" + redirectURL;
     }
 }
