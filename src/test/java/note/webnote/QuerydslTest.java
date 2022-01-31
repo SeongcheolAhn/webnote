@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-@ActiveProfiles("test")
 @SpringBootTest
 @Transactional
 public class QuerydslTest {
@@ -36,7 +35,7 @@ public class QuerydslTest {
 
     @Test
     void test() {
-        Member member = new Member("test", "test", "1234");
+        Member member = new Member("testMember", "testLogin", "1234");
         em.persist(member);
 
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
@@ -45,7 +44,7 @@ public class QuerydslTest {
         Member result = queryFactory
                 .selectFrom(qMember)
                 .where(
-                        qMember.name.eq("test")
+                        qMember.name.eq("testMember")
                 )
                 .fetchOne();
 
@@ -59,11 +58,11 @@ public class QuerydslTest {
     void memberHomeTest() {
 
         // given
-        Member memberA = new Member("memberA", "loginA", "1234");
+        Member memberA = new Member("testMemberA", "testLoginA", "1234");
         memberRepository.save(memberA);
-        Member memberB = new Member("memberB", "loginB", "1234");
+        Member memberB = new Member("testMemberB", "testLoginB", "1234");
         memberRepository.save(memberB);
-        Member memberC = new Member("memberC", "loginC", "1234");
+        Member memberC = new Member("testMemberC", "testLoginC", "1234");
         memberRepository.save(memberC);
 
         Note note = new Note("titleA", "contentA");

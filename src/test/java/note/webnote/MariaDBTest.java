@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@ActiveProfiles("test")
 @SpringBootTest
 @Transactional
 public class MariaDBTest {
@@ -22,7 +21,7 @@ public class MariaDBTest {
     @Test
     void connect() {
         // given
-        Member member = new Member("memberA", "loginA", "1234");
+        Member member = new Member("testMemberA", "testLoginA", "1234");
         memberRepository.save(member);
 
         // when

@@ -17,7 +17,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@ActiveProfiles("test")
 @SpringBootTest
 @Transactional
 class MemberServiceTest {
@@ -74,9 +73,9 @@ class MemberServiceTest {
     void 모든_회원조회() {
 
         // given
-        Member memberA = new Member("testMemberA", "loginA", "1234");
-        Member memberB = new Member("testMemberB", "loginB", "2345");
-        Member memberC = new Member("testMemberC", "loginC", "3456");
+        Member memberA = new Member("testMemberA", "testLoginA", "1234");
+        Member memberB = new Member("testMemberB", "testLoginB", "2345");
+        Member memberC = new Member("testMemberC", "testLoginC", "3456");
 
         memberService.join(memberA);
         memberService.join(memberB);
