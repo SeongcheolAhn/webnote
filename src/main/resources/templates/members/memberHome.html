@@ -26,14 +26,20 @@
             <th>권한</th>
             <th>마지막 수정일</th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="mn : ${memberHomeDto.memberHomeMemberNoteDtos}">
             <td th:text="${mn.noteId}"></td>
-            <td th:text="${mn.title}"></td>
+            <td th:text="${mn.title}"
+            th:onclick="|location.href='@{/{memberId}/notes/{noteId} (memberId=${memberHomeDto.memberId}, noteId=${mn.noteId})}'|"
+            class="text-primary" role="button"></td>
             <td th:text="${mn.permission}"></td>
             <td th:text="${mn.lastModifiedDate}"></td>
+            <td th:if="${mn.permission.equals(T(note.webnote.domain.Permission).HOST)}">
+                <a href="#" th:href="@{/{memberId}/notes/{noteId}/delete (memberId=${memberHomeDto.memberId}, noteId=${mn.noteId})}" class="text-danger">노트 삭제</a>
+            </td>
             <td>
                 <a href="#" th:href="@{/{memberId}/notes/{noteId} (memberId=${memberHomeDto.memberId}, noteId=${mn.noteId})}" class="btn btn-primary" role="button">보기</a>
             </td>

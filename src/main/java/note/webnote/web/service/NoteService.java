@@ -213,4 +213,16 @@ public class NoteService {
         noteRepository.saveMemberNote(new MemberNote(member, note, permission));
         return "success";
     }
+
+    /**
+     * 노트 삭제
+     *
+     * note를 삭제하면 member_note 테이블의 정보도 함께 삭제된다.
+     * member_note 테이블에 cascade 속성이 걸러있다.
+     */
+    @Transactional
+    public void deleteNote(Long noteId) {
+        log.info("노트 id ={} 삭제", noteId);
+        noteRepository.deleteById(noteId);
+    }
 }

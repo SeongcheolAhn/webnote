@@ -3,15 +3,15 @@ package note.webnote.web.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import note.webnote.domain.Note;
-import note.webnote.web.dto.EditNoteDto;
-import note.webnote.web.dto.EditPermissionDto;
-import note.webnote.web.dto.ParticipantsDto;
-import note.webnote.web.dto.ViewNoteDto;
+import note.webnote.web.dto.*;
 import note.webnote.web.form.AddParticipantForm;
 import note.webnote.web.form.EditNoteForm;
 import note.webnote.web.form.NoteSaveForm;
 import note.webnote.web.service.LoginService;
+import note.webnote.web.service.MemberService;
 import note.webnote.web.service.NoteService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +29,7 @@ public class NoteController {
 
     private final NoteService noteService;
     private final LoginService loginService;
+    private final MemberService memberService;
 
     @GetMapping("/{noteId}")
     public String note(@PathVariable Long noteId,
@@ -188,5 +189,22 @@ public class NoteController {
 
         String redirectURL = "/" + loginMemberId + "/notes/" + noteId;
         return "redirect:" + redirectURL;
+    }
+
+    /**
+     * 노트 삭제
+     */
+    @GetMapping("/{noteId}/delete")
+    public String deleteNote(@PathVariable Long noteId,
+                             @PathVariable Long loginMemberId,
+                             MemberHomeCondition condition,
+                             @PageableDefault(size = 5) Pageable pageable,
+                             Model model, HttpServletRequest request) {
+        log.info("[GET] 노트 삭제");
+
+        noteService.deleteNote(noteId);
+        memberService.findNotes(loginMemberId, condition, pageable, model);
+
+        return "members/memberHome";
     }
 }
