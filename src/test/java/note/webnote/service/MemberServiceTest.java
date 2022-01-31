@@ -28,7 +28,7 @@ class MemberServiceTest {
     void 회원가입() {
 
         // given
-        Member member = new Member("memberA", "loginA", "1234");
+        Member member = new Member("testMemberA", "testLoginA", "1234");
 
         // when
         Long saveMemberId = memberService.join(member);
@@ -42,8 +42,8 @@ class MemberServiceTest {
     void 중복_회원_검증() {
 
         // given
-        Member memberA = new Member("memberA", "loginA", "1234");
-        Member memberB = new Member("memberA", "loginA", "2233");
+        Member memberA = new Member("testMemberA", "testLoginA", "1234");
+        Member memberB = new Member("testMemberA", "testLoginA", "2233");
 
         // when
         memberService.join(memberA);
@@ -57,7 +57,7 @@ class MemberServiceTest {
     void 회원조회() {
 
         // given
-        Member memberA = new Member("memberA", "loginA", "1234");
+        Member memberA = new Member("testMemberA", "testLoginA", "1234");
         Long memberAId = memberService.join(memberA);
 
         // when
