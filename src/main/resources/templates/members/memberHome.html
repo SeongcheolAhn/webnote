@@ -40,9 +40,14 @@
             <td th:if="${mn.permission.equals(T(note.webnote.domain.Permission).HOST)}">
                 <a href="#" th:href="@{/{memberId}/notes/{noteId}/delete (memberId=${memberHomeDto.memberId}, noteId=${mn.noteId})}" class="text-danger">노트 삭제</a>
             </td>
+            <td th:unless="${mn.permission.equals(T(note.webnote.domain.Permission).HOST)}">
+                <a href="#" th:href="@{/{memberId}/notes/{noteId}/delete (memberId=${memberHomeDto.memberId}, noteId=${mn.noteId})}" class="text-danger">    </a>
+            </td>
+            <!--/*
             <td>
                 <a href="#" th:href="@{/{memberId}/notes/{noteId} (memberId=${memberHomeDto.memberId}, noteId=${mn.noteId})}" class="btn btn-primary" role="button">보기</a>
             </td>
+            */-->
         </tr>
         </tbody>
     </table>
